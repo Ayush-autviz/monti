@@ -14,7 +14,7 @@ const employeeSchema = z.object({
   employee_code: z.string().length(6, 'Employee code must be exactly 6 characters'),
   pfms_code: z.string().length(14, 'PFMS code must be exactly 14 characters'),
   name: z.string().min(1, 'Name is required'),
-  sex: z.enum(['Male', 'Female'], { required_error: 'Sex is required' }),
+  sex: z.enum(['Male', 'Female']),
   dob: z.string().min(1, 'Date of birth is required'),
   doj: z.string().min(1, 'Date of joining is required'),
   confirmation_date: z.string().min(1, 'Confirmation date is required'),

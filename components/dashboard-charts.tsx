@@ -21,7 +21,7 @@ const COLORS = {
 interface ChartData {
   name: string
   value: number
-  count?: number
+  count: number
   color?: string
 }
 
@@ -65,7 +65,7 @@ export function DashboardCharts({ year = new Date().getFullYear() }: DashboardCh
       const leaveTypeChartData = Object.entries(leaveByType).map(([code, data]) => ({
         name: data.name,
         value: data.value,
-        count: data.count,
+        count: data.count || 0,
         color: COLORS[code as keyof typeof COLORS]
       }))
 
@@ -78,6 +78,7 @@ export function DashboardCharts({ year = new Date().getFullYear() }: DashboardCh
       const statusChartData = Object.entries(statusCounts).map(([status, count]) => ({
         name: status,
         value: count,
+        count: count,
         color: COLORS[status as keyof typeof COLORS]
       }))
 
@@ -322,10 +323,11 @@ export function DashboardCharts({ year = new Date().getFullYear() }: DashboardCh
             {leaveTypeData.length > 0 ? (
               <div>
                 <div className="text-2xl font-bold text-purple-600">
-                  {Math.round(
-                    leaveTypeData.reduce((sum, type) => sum + type.value, 0) /
-                    leaveTypeData.reduce((sum, type) => sum + type.count, 0) * 10
-                  ) / 10} days
+                  {(() => {
+                    const totalDays = leaveTypeData.reduce((sum, type) => sum + type.value, 0);
+                    const totalCount = leaveTypeData.reduce((sum, type) => sum + (type.count || 0), 0);
+                    return totalCount > 0 ? Math.round((totalDays / totalCount) * 10) / 10 : 0;
+                  })()} days
                 </div>
                 <div className="text-sm text-gray-500">per application</div>
               </div>

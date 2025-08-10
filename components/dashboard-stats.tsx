@@ -47,9 +47,11 @@ export function DashboardStats({ year = new Date().getFullYear() }: DashboardSta
       const rejectedApplications = leaveStats.statusStats.filter(app => app.status === 'REJECTED').length
 
       // Calculate leave days by type
-      const leaveByType = leaveStats.typeStats.reduce((acc, leave) => {
-        const code = leave.leave_types.code
-        acc[code] = (acc[code] || 0) + leave.days_requested
+      const leaveByType = leaveStats.typeStats.reduce((acc, leave: any) => {
+        if (leave.leave_types && typeof leave.leave_types === 'object' && 'code' in leave.leave_types) {
+          const code = leave.leave_types.code
+          acc[code] = (acc[code] || 0) + leave.days_requested
+        }
         return acc
       }, {} as Record<string, number>)
 
